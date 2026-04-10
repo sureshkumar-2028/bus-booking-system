@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MyBus Admin Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root{--b1:#0072ff;--b2:#00c6ff;--bg:#f5f7fb}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto;background:var(--bg);color:#222}
+  header{background:linear-gradient(90deg,var(--b2),var(--b1));color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:40px;height:20px;object-fit:contain;background:#fff;border-radius:4px}
+  main{max-width:1100px;margin:18px auto;padding:10px}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .tab{border:none;background:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700;box-shadow:0 8px 18px rgba(0,0,0,.06)}
+  .tab.active{background:linear-gradient(90deg,var(--b2),var(--b1));color:#fff}
+  section.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 18px rgba(0,0,0,.06)}
+  h3{margin:0 0 10px;color:#0f172a}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  label{font-weight:600;margin:6px 0 4px;display:block}
+  input,select,textarea{width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:10px;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--b1);box-shadow:0 0 0 4px rgba(0,114,255,.12)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .btn{border:none;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}
+  .primary{color:#fff;background:linear-gradient(135deg,var(--b2),var(--b1))}
+  .soft{background:#f3f4f6}
+  .danger{background:#ef4444;color:#fff}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{border-bottom:1px solid #eef2f7;padding:10px;text-align:left;font-size:14px}
+  th{background:#f8fafc}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#e6f4ff;color:#0369a1;font-size:12px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:10px 14px;border-radius:12px;display:none;z-index:10}
+  .muted{color:#6b7280;font-size:13px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="Images/MyBus.png" alt="logo"><strong>MyBus Admin</strong>
+  </div>
+  <div>
+    <button id="changePassBtn" class="btn soft"><i class="fa fa-key"></i> Change Password</button>
+    <button id="logoutBtn" class="btn danger"><i class="fa fa-right-from-bracket"></i> Logout</button>
+  </div>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab active" data-tab="buses"><i class="fa fa-bus"></i> Buses</button>
+    <button class="tab" data-tab="bookings"><i class="fa fa-ticket"></i> Bookings</button>
+    <button class="tab" data-tab="users"><i class="fa fa-users"></i> Users</button>
+    <button class="tab" data-tab="settings"><i class="fa fa-gear"></i> Settings</button>
+  </div>
+
+  <!-- BUSES -->
+  <section id="buses" class="card">
+    <h3>Manage Buses</h3>
+    <div class="grid">
+      <div>
+        <label>Operator</label>
+        <input id="op" placeholder="Shri Ganesh Travels — Volvo AC">
+      </div>
+      <div>
+        <label>Type</label>
+        <input id="type" placeholder="Volvo AC / Sleeper / Non-AC">
+      </div>
+      <div>
+        <label>Departure</label>
+        <input id="dep" placeholder="10:00">
+      </div>
+      <div>
+        <label>Arrival</label>
+        <input id="arr" placeholder="16:00">
+      </div>
+      <div>
+        <label>Duration (hrs)</label>
+        <input id="dur" type="number" min="1" step="0.5" placeholder="6">
+      </div>
+      <div>
+        <label>Price (₹)</label>
+        <input id="price" type="number" min="0" step="1" placeholder="3000">
+      </div>
+      <div class="grid" style="grid-template-columns:1fr">
+        <label>Features (comma separated)</label>
+        <input id="features" placeholder="Wi-Fi, AC, Charging">
+      </div>
+    </div>
+    <div class="row">
+      <button id="saveBus" class="btn primary"><i class="fa fa-plus"></i> Save Bus</button>
+      <button id="clearForm" class="btn soft">Clear</button>
+    </div>
+
+    <table id="busTable">
+      <thead>
+        <tr>
+          <th>#</th><th>Operator</th><th>Type</th><th>Dep</th><th>Arr</th><th>Dur</th><th>Price</th><th>Features</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="muted">Tip: This writes to <b>localStorage.mybus_buses</b>. Your front-end pages can read from it.</div>
+  </section>
+
+  <!-- BOOKINGS -->
+  <section id="bookings" class="card" style="display:none">
+    <h3>All Bookings</h3>
+    <div class="muted">Looks for <b>localStorage.mybus_bookings</b>. If your user flow saves bookings there, they’ll appear below.</div>
+    <table id="bookingsTable"><thead>
+      <tr><th>#</th><th>Name</th><th>Route</th><th>Date</th><th>Seats</th><th>Operator</th><th>Amount</th></tr>
+    </thead><tbody></tbody></table>
+  </section>
+
+  <!-- USERS -->
+  <section id="users" class="card" style="display:none">
+    <h3>Users</h3>
+    <div class="muted">Reads <b>localStorage.mybus_users</b>. Add from your signup/login flow if needed.</div>
+    <table id="usersTable"><thead>
+      <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th></tr>
+    </thead><tbody></tbody></table>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="settings" class="card" style="display:none">
+    <h3>Settings</h3>
+    <p><b>Admin Username</b></p>
+    <input id="admUser" placeholder="admin">
+    <p style="margin-top:8px"><b>New Password</b></p>
+    <input id="admPass" placeholder="••••••">
+    <div class="row">
+      <button id="saveAdmin" class="btn primary"><i class="fa fa-floppy-disk"></i> Save Admin</button>
+      <button id="seedData" class="btn soft"><i class="fa fa-database"></i> Seed Demo Data</button>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+/* ===== Keys ===== */
+const ADMIN_KEY   = 'mybus_admin';
+const SESSION_KEY = 'mybus_admin_session';
+const BUSES_KEY   = 'mybus_buses';     // [{id,operator,type,dep,arr,dur,price,features[]}]
+const BOOK_KEY    = 'mybus_bookings';  // [{id,name,route,date,seats,operator,amount}]
+const USERS_KEY   = 'mybus_users';     // [{id,name,email,phone}]
+
+/* ===== Guard: must be logged in ===== */
+if(sessionStorage.getItem(SESSION_KEY)!=='true'){
+  location.href='admin-login.html';
+}
+
+/* ===== Helpers ===== */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const toast = (m)=>{const t=$('#toast');t.textContent=m;t.style.display='block';t.style.opacity='1';setTimeout(()=>{t.style.opacity='0';t.style.display='none'},1600)};
+
+const read = (k,d=[])=>JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
+const write= (k,v)=>localStorage.setItem(k,JSON.stringify(v));
+
+/* ===== Tabs ===== */
+$$('.tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    $$('.tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    ['buses','bookings','users','settings'].forEach(id=>$('#'+id).style.display='none');
+    $('#'+btn.dataset.tab).style.display='block';
+  });
+});
+
+/* ===== Admin header buttons ===== */
+$('#logoutBtn').addEventListener('click', ()=>{
+  sessionStorage.removeItem(SESSION_KEY);
+  location.href='admin-login.html';
+});
+$('#changePassBtn').addEventListener('click', ()=>{
+  document.querySelector('[data-tab="settings"]').click();
+});
+
+/* ===== Buses CRUD ===== */
+let editId = null;
+
+function renderBuses(){
+  const rows = read(BUSES_KEY);
+  const tb = $('#busTable tbody'); tb.innerHTML='';
+  rows.forEach((b,idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${idx+1}</td>
+      <td>${b.operator}</td>
+      <td>${b.type||''}</td>
+      <td>${b.dep}</td>
+      <td>${b.arr}</td>
+      <td>${b.dur}</td>
+      <td>₹${b.price}</td>
+      <td>${(b.features||[]).map(f=>`<span class="pill">${f}</span>`).join(' ')}</td>
+      <td>
+        <button class="btn soft" data-edit="${b.id}"><i class="fa fa-pen"></i></button>
+        <button class="btn danger" data-del="${b.id}"><i class="fa fa-trash"></i></button>
+      </td>`;
+    tb.appendChild(tr);
+  });
+  // bind
+  tb.querySelectorAll('[data-edit]').forEach(btn=>btn.onclick=()=>startEdit(+btn.dataset.edit));
+  tb.querySelectorAll('[data-del]').forEach(btn=>btn.onclick=()=>delBus(+btn.dataset.del));
+}
+function startEdit(id){
+  const arr = read(BUSES_KEY);
+  const b = arr.find(x=>x.id===id);
+  if(!b) return;
+  editId = id;
+  $('#op').value = b.operator; $('#type').value=b.type||'';
+  $('#dep').value=b.dep; $('#arr').value=b.arr; $('#dur').value=b.dur;
+  $('#price').value=b.price; $('#features').value=(b.features||[]).join(', ');
+  toast('Edit mode');
+}
+function delBus(id){
+  let arr = read(BUSES_KEY);
+  arr = arr.filter(x=>x.id!==id);
+  write(BUSES_KEY, arr);
+  renderBuses();
+  toast('Bus deleted');
+}
+$('#clearForm').addEventListener('click', ()=>{editId=null; ['op','type','dep','arr','dur','price','features'].forEach(id=>$('#'+id).value='')});
+$('#saveBus').addEventListener('click', ()=>{
+  const bus = {
+    operator: $('#op').value.trim(),
+    type: $('#type').value.trim(),
+    dep: $('#dep').value.trim(),
+    arr: $('#arr').value.trim(),
+    dur: +($('#dur').value||0),
+    price: +($('#price').value||0),
+    features: $('#features').value.split(',').map(s=>s.trim()).filter(Boolean)
+  };
+  if(!bus.operator || !bus.dep || !bus.arr){ toast('Please fill Operator, Dep & Arr'); return; }
+  let arr = read(BUSES_KEY);
+  if(editId){
+    const i = arr.findIndex(x=>x.id===editId);
+    if(i>-1) arr[i] = {...bus, id: editId};
+    editId = null;
+  }else{
+    const nextId = (arr.length? Math.max(...arr.map(x=>x.id))+1 : 1);
+    arr.push({...bus, id: nextId});
+  }
+  write(BUSES_KEY, arr);
+  renderBuses();
+  ['op','type','dep','arr','dur','price','features'].forEach(id=>$('#'+id).value='');
+  toast('Saved');
+});
+
+/* ===== Bookings & Users render (read-only) ===== */
+function renderBookings(){
+  const rows = read(BOOK_KEY);
+  const tb = $('#bookingsTable tbody'); tb.innerHTML='';
+  rows.forEach((r,idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${idx+1}</td><td>${r.name||'-'}</td><td>${r.route||'-'}</td><td>${r.date||'-'}</td><td>${r.seats||'-'}</td><td>${r.operator||'-'}</td><td>${r.amount?'₹'+r.amount:'-'}</td>`;
+    tb.appendChild(tr);
+  });
+}
+function renderUsers(){
+  const rows = read(USERS_KEY);
+  const tb = $('#usersTable tbody'); tb.innerHTML='';
+  rows.forEach((u,idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${idx+1}</td><td>${u.name||'-'}</td><td>${u.email||'-'}</td><td>${u.phone||'-'}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* ===== Settings ===== */
+const admin = JSON.parse(localStorage.getItem(ADMIN_KEY) || '{"username":"Suresh","password":"Su@1234"}');
+$('#admUser').value = admin.username;
+$('#saveAdmin').addEventListener('click', ()=>{
+  const u = $('#admUser').value.trim();
+  const p = $('#admPass').value;
+  if(!u || !p){ toast('Username and new password required'); return; }
+  localStorage.setItem(ADMIN_KEY, JSON.stringify({username:u, password:p}));
+  toast('Admin updated');
+  $('#admPass').value = '';
+});
+$('#seedData').addEventListener('click', ()=>{
+  // sample buses
+  const buses = [
+    {id:1, operator:'Shri Ganesh Travels — Volvo AC', type:'Volvo AC', dep:'10:00', arr:'16:00', dur:6, price:3000, features:['Wi-Fi','AC']},
+    {id:2, operator:'Royal Express — Sleeper', type:'Sleeper', dep:'21:00', arr:'06:00', dur:9, price:2200, features:['AC','Blanket']},
+    {id:3, operator:'CityLine — Non-AC', type:'Non-AC', dep:'07:30', arr:'12:00', dur:4.5, price:900, features:['Charging']}
+  ];
+  write(BUSES_KEY, buses);
+  // sample bookings
+  write(BOOK_KEY, [
+    {id:1, name:'Aman Kumar', route:'Jaipur → Delhi', date:'2025-11-20', seats:2, operator:buses[0].operator, amount:6000},
+    {id:2, name:'Neha Sharma', route:'Delhi → Agra', date:'2025-11-22', seats:1, operator:buses[1].operator, amount:2200}
+  ]);
+  // sample users
+  write(USERS_KEY, [
+    {id:1, name:'Aman Kumar', email:'aman@example.com', phone:'+91-9000000001'},
+    {id:2, name:'Neha Sharma', email:'neha@example.com', phone:'+91-9000000002'}
+  ]);
+  renderBuses(); renderBookings(); renderUsers();
+  toast('Seeded demo data');
+});
+
+/* ===== Init ===== */
+(function init(){
+  if(!localStorage.getItem(BUSES_KEY)) write(BUSES_KEY, []);
+  renderBuses(); renderBookings(); renderUsers();
+})();
+</script>
+</body>
+</html>

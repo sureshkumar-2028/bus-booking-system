@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-blue: #0072ff;
+      --gradient-start: #00c6ff;
+      --gradient-end: #0072ff;
+      --bg-light: #eef2f3;
+      --bg-light-alt: #dfe9f3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, var(--bg-light), var(--bg-light-alt));
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .logo a {
+      color: white;
+      font-size: 24px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 18px;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 200;
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background-color: white;
+      transition: all 0.3s ease;
+    }
+
+    .hidden-checkbox {
+      display: none;
+    }
+
+    /* CONTENT */
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-blue);
+      margin-bottom: 30px;
+    }
+
+    .policy-section {
+      background: white;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .policy-section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .policy-section h2 {
+      color: var(--gradient-start);
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    footer {
+      background: #1a252f;
+      color: #ccc;
+      text-align: center;
+      padding: 15px;
+      margin-top: auto;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hamburger-menu {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: left 0.3s ease;
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .hidden-checkbox:checked ~ .nav-links {
+        left: 0;
+      }
+
+      .hidden-checkbox:checked + .hamburger-menu .bar:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .hidden-checkbox:checked + .hamburger-menu .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hidden-checkbox:checked + .hamburger-menu .bar:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">
+      <img src="Images/MyBus.png" alt="MyBus Logo">
+      <a href="#">MyBus</a>
+    </div>
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle navigation menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+    <div class="nav-links">
+      <a href="index.html"><i class="fa fa-home"></i> Home</a>
+      <a href="MyBooking.html"><i class="fa fa-ticket"></i> Booking</a>
+      <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+      <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+      <a href="login.html"><i class="fa fa-user"></i> Login/SignUp</a>
+    </div>
+  </nav>
+
+  <!-- Privacy Policy Content -->
+  <div class="container">
+    <h1>Privacy Policy</h1>
+
+    <div class="policy-section">
+      <h2>1. Introduction</h2>
+      <p>At MyBus, we value your trust. This Privacy Policy explains how we collect, use, and protect your personal
+        information when you use our bus ticket booking services.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>2. Information We Collect</h2>
+      <p>We may collect personal details such as your name, email, phone number, payment details, and travel
+        preferences. Technical data like IP address, browser, and cookies may also be collected for a better
+        user experience.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>3. How We Use Your Information</h2>
+      <ul>
+        <li>To process your bookings and payments securely.</li>
+        <li>To send booking confirmations and updates.</li>
+        <li>To provide customer support and improve services.</li>
+        <li>To personalize offers and promotions.</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>4. Sharing of Information</h2>
+      <p>Your data may be shared with bus operators, payment gateways, and trusted service providers. We never sell
+        your information to third parties for marketing purposes.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>5. Data Security</h2>
+      <p>We use secure encryption and strict measures to safeguard your personal data. However, no system is
+        completely secure, and we cannot guarantee absolute protection.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>6. Your Rights</h2>
+      <p>You have the right to access, update, or delete your personal data. You may also opt out of promotional
+        communications anytime.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>7. Updates to Policy</h2>
+      <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with the updated
+        date.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>8. Contact Us</h2>
+      <p>If you have any questions about this Privacy Policy, please contact us at:
+        <br><b>Email:</b> support@mybus.com
+        <br><b>Phone:</b> +91-9777773080
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 MyBus India Pvt Ltd. All Rights Reserved</p>
+  </footer>
+</body>
+
+</html>

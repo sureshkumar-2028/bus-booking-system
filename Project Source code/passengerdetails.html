@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Passenger Details | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial;
+      background: #f9fafb;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* NAV (matches site) */
+    .logo a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 700
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+      object-fit: contain
+    }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: box-shadow .2s ease
+    }
+
+    nav.scrolled {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+    }
+
+    .hamburger-menu {
+      display: none;
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 200;
+      flex-direction: column;
+      justify-content: space-around
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background: #fff;
+      transition: .3s
+    }
+
+    .hidden-checkbox {
+      display: none
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: end;
+      align-items: center
+    }
+
+    .nav-links {
+      display: flex
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 12px 18px;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: background .25s, transform .15s
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, .2);
+      transform: translateY(-1px)
+    }
+
+    /* PAGE */
+    main {
+      flex: 1;
+      padding: 24px 16px;
+      max-width: 1050px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0 18px
+    }
+
+    .head h2 {
+      margin: 0;
+      color: #0072ff
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e6f4ff;
+      color: #0369a1;
+      font-size: 12px;
+      margin-left: 8px
+    }
+
+    .mini {
+      color: #6b7280;
+      font-size: 14px
+    }
+
+    .wrap {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #eef2f7;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+      padding: 18px
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      color: #111827;
+      font-size: 18px
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin: 8px 0 6px
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #0072ff;
+      box-shadow: 0 0 0 4px rgba(0, 114, 255, .15)
+    }
+
+    .note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 6px
+    }
+
+    .price-line {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0
+    }
+
+    .tot {
+      font-weight: 800
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform .18s, box-shadow .25s, background .25s
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      box-shadow: 0 8px 20px rgba(0, 114, 255, .35)
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 12px 26px rgba(0, 114, 255, .45);
+      background: linear-gradient(135deg, #008cff, #005edb)
+    }
+
+    .btn-ghost {
+      background: #ef4444;
+      color: #fff
+    }
+
+    .btn-ghost:hover {
+      transform: translateY(-2px);
+      background: #dc2626;
+      box-shadow: 0 8px 20px rgba(220, 38, 38, .35)
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center
+    }
+
+    .empty p {
+      color: #6b7280
+    }
+
+    footer {
+      background: #1a252f;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 14px;
+      color: #fff;
+      margin-top: auto
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111827;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .25);
+      display: none;
+      z-index: 2000
+    }
+
+    @media (max-width:900px) {
+      .wrap {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media (max-width:768px) {
+      .hamburger-menu {
+        display: flex
+      }
+
+      .nav-container {
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        background: rgba(0, 114, 255, .95);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-100%);
+        transition: transform .3s;
+        z-index: 100
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%
+      }
+
+      .hidden-checkbox:checked~.nav-container {
+        transform: translateX(0)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+        opacity: 0
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="logo">
+      <img src="Images/MyBus.png" alt="MyBus Logo">
+      <a href="#">MyBus</a>
+    </div>
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a href="MyBooking.html"><i class="fa fa-ticket"></i> My Booking</a>
+        <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+        <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+        <a href="login.html"><i class="fas fa-user"></i> Login/SignUp</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="head">
+      <h2>Passenger Details <span id="routePill" class="pill" style="display:none"></span></h2>
+      <div class="mini" id="meta"></div>
+    </div>
+
+    <div id="content" class="wrap" style="display:none;">
+      <!-- Left: Passenger form -->
+      <form id="passForm" class="card" autocomplete="off" novalidate>
+        <h3><i class="fa fa-id-card"></i> Passenger Information</h3>
+
+        <label for="fullname">Full Name</label>
+        <input id="fullname" type="text" placeholder="Your name" required>
+
+        <div class="row">
+          <div>
+            <label for="age">Age</label>
+            <input id="age" type="number" min="1" max="120" placeholder="e.g., 22" required>
+          </div>
+          <div>
+            <label for="gender">Gender</label>
+            <select id="gender" required>
+              <option value="" disabled selected>Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" inputmode="numeric" placeholder="10-digit mobile" maxlength="10" required>
+            <div class="note">Use Indian number starting with 6–9.</div>
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Continue</button>
+          <button type="button" id="cancelBtn" class="btn btn-ghost"><i class="fa fa-times"></i> Cancel</button>
+        </div>
+      </form>
+
+      <!-- Right: Summary -->
+      <div class="card">
+        <h3><i class="fa fa-receipt"></i> Trip Summary</h3>
+        <div class="price-line"><span>Operator</span><span id="s-operator">-</span></div>
+        <div class="price-line"><span>Departure</span><span id="s-dep">-</span></div>
+        <div class="price-line"><span>Arrival</span><span id="s-arr">-</span></div>
+        <div class="price-line"><span>Seats</span><span id="s-seats">-</span></div>
+        <div class="price-line"><span>Base Fare</span><span>₹<span id="s-price">0</span></span></div>
+        <div class="price-line"><span>Taxes & Fees</span><span>₹<span id="s-fee">49</span></span></div>
+        <hr style="border:0;border-top:1px solid #eef2f7;margin:10px 0">
+        <div class="price-line tot"><span>Total</span><span>₹<span id="s-total">0</span></span></div>
+        <div class="note">You’ll get your e-ticket on SMS & Email after confirmation.</div>
+      </div>
+    </div>
+
+    <div id="empty" class="card empty" style="display:none;">
+      <h3><i class="fa fa-circle-info"></i> Booking not found</h3>
+      <p>We couldn’t find this booking on this device. Please choose a bus again.</p>
+      <div class="actions" style="justify-content:center">
+        <a class="btn btn-primary" href="availableBus.html"><i class="fa fa-bus"></i> Find Buses</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>&copy; <span id="year"></span> MyBus India Pvt Ltd. All Rights Reserved</footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Sticky nav shadow + close menu
+    const navbar = document.getElementById('navbar');
+    addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 6), { passive: true });
+    const menuToggle = document.getElementById('menu-toggle');
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      if (menuToggle.checked) menuToggle.checked = false;
+    }));
+
+    // Toast
+    const toastEl = document.getElementById('toast'); let toastTimer;
+    function toast(msg, ms = 1600) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+      requestAnimationFrame(() => {
+        toastEl.style.transition = 'opacity .2s ease, transform .2s ease';
+        toastEl.style.opacity = '1';
+        toastEl.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.opacity = '0';
+        toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toastEl.style.display = 'none', 200);
+      }, ms);
+    }
+
+    // Storage helpers
+    const KEY = 'mybus_bookings';
+    const getBookings = () => JSON.parse(localStorage.getItem(KEY) || '[]');
+    const saveBookings = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+
+    // Get bookingId from URL
+    const params = new URLSearchParams(location.search);
+    const bookingId = params.get('bookingId');
+
+    // Elements
+    const content = document.getElementById('content');
+    const empty = document.getElementById('empty');
+    const routePill = document.getElementById('routePill');
+    const meta = document.getElementById('meta');
+
+    const sOperator = document.getElementById('s-operator');
+    const sDep = document.getElementById('s-dep');
+    const sArr = document.getElementById('s-arr');
+    const sSeats = document.getElementById('s-seats');
+    const sPrice = document.getElementById('s-price');
+    const sFee = document.getElementById('s-fee');
+    const sTotal = document.getElementById('s-total');
+
+    const passForm = document.getElementById('passForm');
+    const fullname = document.getElementById('fullname');
+    const age = document.getElementById('age');
+    const gender = document.getElementById('gender');
+    const phone = document.getElementById('phone');
+    const email = document.getElementById('email');
+
+    // Load booking and prefill summary
+    let booking = null;
+    (function init() {
+      if (!bookingId) { showEmpty(); return; }
+      const arr = getBookings();
+      booking = arr.find(b => b.id === bookingId);
+      if (!booking) { showEmpty(); return; }
+
+      // Head
+      routePill.textContent = booking.route || '';
+      routePill.style.display = booking.route ? 'inline-block' : 'none';
+      meta.textContent = `Date: ${booking.date || '-'} • Status: ${booking.status || 'CONFIRMED'}`;
+
+      // Summary
+      sOperator.textContent = booking.operator || '-';
+      sDep.textContent = booking.dep || '-';
+      sArr.textContent = booking.arr || '-';
+      sSeats.textContent = booking.seats || 1;
+      sPrice.textContent = Number(booking.price || 0).toLocaleString('en-IN');
+      const fee = 49; sFee.textContent = fee.toLocaleString('en-IN');
+      sTotal.textContent = (Number(booking.price || 0) + fee).toLocaleString('en-IN');
+
+      // Prefill if returning
+      if (booking.passenger) {
+        fullname.value = booking.passenger.name || '';
+        age.value = booking.passenger.age || '';
+        gender.value = booking.passenger.gender || '';
+        phone.value = booking.passenger.phone || '';
+        email.value = booking.passenger.email || '';
+      }
+
+      content.style.display = '';
+    })();
+
+    function showEmpty() {
+      empty.style.display = '';
+      content.style.display = 'none';
+    }
+
+    // Simple validators
+    const isEmail = v => /\S+@\S+\.\S+/.test(v);
+    const isPhoneIN = v => /^[6-9]\d{9}$/.test(v);
+
+    // Submit → save passenger + update booking → redirect
+    passForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!booking) { return; }
+
+      const values = {
+        name: fullname.value.trim(),
+        age: Number(age.value),
+        gender: gender.value,
+        phone: phone.value.trim(),
+        email: email.value.trim()
+      };
+
+      if (!values.name) { toast('Enter full name'); fullname.focus(); return; }
+      if (!values.age || values.age < 1) { toast('Enter valid age'); age.focus(); return; }
+      if (!values.gender) { toast('Select gender'); gender.focus(); return; }
+      if (!isPhoneIN(values.phone)) { toast('Enter valid 10-digit mobile'); phone.focus(); return; }
+      if (!isEmail(values.email)) { toast('Enter a valid email'); email.focus(); return; }
+
+      // Update in storage
+      const arr = getBookings();
+      const idx = arr.findIndex(b => b.id === booking.id);
+      if (idx !== -1) {
+        arr[idx] = {
+          ...arr[idx],
+          passenger: values,
+          status: 'TICKETED'
+        };
+        saveBookings(arr);
+        toast('Details saved!');
+        setTimeout(() => location.href = 'MyBooking.html', 650);
+      } else {
+        toast('Booking not found');
+      }
+    });
+
+    // Cancel → back to results
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      history.length > 1 ? history.back() : location.href = 'availableBus.html';
+    });
+  </script>
+</body>
+
+</html>

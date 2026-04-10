@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyBus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --brand-1: #0072ff;
+            --brand-2: #00c6ff;
+            --accent: #ff6f61;
+            --ink: #333;
+            --muted: #555;
+            --bg: #f9fafb;
+            --card: #ffffff;
+            --shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(to right, var(--brand-2), var(--brand-1));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 64px;
+            transition: box-shadow .2s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: .2px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            z-index: 200;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+        }
+
+        .hamburger-menu .bar {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hidden-checkbox {
+            display: none;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.25s ease, transform .15s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        header {
+            height: 260px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            background-image: url(Images/HomeBanner.webp);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, .35));
+        }
+
+        header h1 {
+            font-size: clamp(28px, 6vw, 56px);
+            color: white;
+            margin: 0 12px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes caret {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-top: -56px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            padding: 0.75rem 0.9rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            width: 220px;
+            transition: box-shadow .2s ease, border-color .2s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--brand-1);
+            box-shadow: 0 0 0 4px rgba(0, 114, 255, .15);
+        }
+
+        .seatbox {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .seatbox button {
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 10px;
+            width: 36px;
+            height: 42px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .search-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: 0.9rem 1.4rem;
+            background: var(--brand-1);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.18s ease, background-color 0.25s ease;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(0, 114, 255, .25);
+        }
+
+        .search-btn:hover {
+            background: var(--accent);
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .swap-btn {
+            align-self: end;
+            transform: translateY(-6px);
+            border: none;
+            background: transparent;
+            color: var(--brand-1);
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1150px;
+            margin: 2rem auto;
+            background-color: var(--card);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .section {
+            padding: 2rem 1rem;
+            max-width: 1150px;
+            margin: 2rem auto;
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 26px;
+            color: var(--brand-1);
+        }
+
+        .routes-grid,
+        .offers-grid,
+        .features-grid,
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .card {
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow .3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, .04);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, .12);
+        }
+
+        .card i {
+            font-size: 28px;
+            margin-bottom: 0.8rem;
+            color: var(--brand-1);
+        }
+
+        .card h3 {
+            margin: 0.5rem 0;
+            font-size: 18px;
+            color: var(--ink);
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .offers-grid {
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(240px, 1fr);
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1rem;
+            padding-bottom: .5rem;
+        }
+
+        .offers-grid .card {
+            scroll-snap-align: start;
+            min-height: 140px;
+        }
+
+        .footer-sections {
+            background: #2c3e50;
+            padding: 50px 20px;
+            color: white;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            max-width: 1150px;
+            margin: auto;
+            gap: 1.2rem;
+        }
+
+        .footer-box h4 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            border-left: 4px solid var(--brand-2);
+            padding-left: 8px;
+        }
+
+        .footer-box p,
+        .footer-box a {
+            font-size: 14px;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .footer-box a {
+            display: inline-block;
+            text-decoration: none;
+            margin-top: 5px;
+        }
+
+        .footer-box a:hover {
+            text-decoration: underline;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin: 0 8px;
+            color: var(--brand-2);
+            font-size: 18px;
+            transition: .3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--accent);
+            transform: scale(1.2);
+        }
+
+        footer {
+            background: #1a252f;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 14px;
+            color: white;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #111827;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, .25);
+            display: none;
+            z-index: 2000;
+        }
+        .to-top {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            background: white;
+            color: var(--brand-1);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s linear .2s, opacity .2s ease, transform .2s ease;
+        }
+
+        .to-top.show {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0s;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                justify-content: space-between;
+            }
+
+            .hamburger-menu {
+                display: flex;
+            }
+
+            .nav-container {
+                position: fixed;
+                inset: 0;
+                height: 100vh;
+                background-color: rgba(0, 114, 255, 0.95);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                z-index: 100;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                padding: 20px 0;
+            }
+
+            .nav-links a {
+                font-size: 20px;
+                padding: 15px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .hidden-checkbox:checked~.nav-container {
+                transform: translateX(0);
+            }
+
+            .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .form-group input {
+                width: 450px;
+            }
+
+            .swap-btn {
+                align-self: center;
+                transform: none;
+            }
+            .seatbox{
+                width: 250px;
+            }
+             .seatbox button{
+                width: 25px;
+                height: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                height: auto;
+            }
+
+            nav {
+                height: 52px;
+            }
+
+            .form-group input {
+                width: 260px;
+            }
+
+            .search-btn {
+                width: 260px;
+                justify-content: center;
+            }
+            .seatbox{
+                width: 240px;
+            }
+            .seatbox button{
+                width: 25px;
+                height: 25px;
+            }
+        }
+/* DEBUG: temporarily force reveal elements visible */
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .reveal.visible {
+         opacity: 1 !important; 
+         transform: none !important;
+         }
+
+    </style>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div class="logo">
+            <img src="Images/MyBus.png" alt="MyBus Logo" />
+            <a href="#">MyBus</a>
+        </div>
+        <input type="checkbox" id="menu-toggle" class="hidden-checkbox" />
+        <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu" role="button" tabindex="0">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </label>
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html"><i class="fa fa-home"></i> Home</a>
+                <a href="MyBooking.html"><i class="fa fa-ticket"></i> My Booking</a>
+                <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+                <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+                <a href="login.html"><i class="fas fa-user"></i> Login/SignUp</a>
+                <a href="admin-login.html">Admin</a>
+
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <h1>
+            India's No.1 Online Ticket Booking Site
+        </h1>
+    </header>
+
+    <main>
+        <section class="search-container reveal">
+            <form class="search-form" id="searchForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="origin"><i class="fa fa-bus"></i> From</label>
+                    <input type="text" id="origin" name="origin" placeholder="Enter city" required />
+                </div>
+                <button type="button" class="swap-btn" id="swapBtn" title="Swap"><i
+                        class="fa-solid fa-right-left"></i></button>
+                <div class="form-group">
+                    <label for="destination"><i class="fa fa-map-marker-alt"></i> To</label>
+                    <input type="text" id="destination" name="destination" placeholder="Enter city" required />
+                </div>
+                <div class="form-group">
+                    <label for="date"><i class="fa fa-calendar"></i> Date</label>
+                    <input type="date" id="date" name="date" required />
+                </div>
+                <div class="form-group">
+                    <label for="seats"><i class="fa fa-chair"></i> Seats</label>
+                    <div class="seatbox">
+                        <button type="button" id="decSeat" aria-label="Decrease seats">–</button>
+                        <input type="number" id="seats" min="1" max="10" placeholder="No. of seats" value="1" />
+                        <button type="button" id="incSeat" aria-label="Increase seats">+</button>
+                    </div>
+                </div>
+                <button type="submit" class="search-btn"><i class="fa fa-search"></i> Search Bus</button>
+            </form>
+            <div id="recentSearches" style="margin-top:12px; display:none;">
+                <small style="color:#6b7280; font-weight:600;">Recent searches:</small>
+                <div id="recentChips" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:8px;"></div>
+            </div>
+        </section>
+    </main>
+
+    <section class="section reveal">
+        <h2>Popular Routes</h2>
+        <div class="routes-grid">
+            <div class="card"><i class="fa fa-bus"></i>
+                <h3>Delhi → Jaipur</h3>
+                <p>From ₹<span class="counter" data-to="500">0</span></p>
+            </div>
+            <div class="card"><i class="fa fa-bus"></i>
+                <h3>Mumbai → Pune</h3>
+                <p>From ₹<span class="counter" data-to="299">0</span></p>
+            </div>
+            <div class="card"><i class="fa fa-bus"></i>
+                <h3>Bangalore → Hyderabad</h3>
+                <p>From ₹<span class="counter" data-to="499">0</span></p>
+            </div>
+            <div class="card"><i class="fa fa-bus"></i>
+                <h3>Chennai → Coimbatore</h3>
+                <p>From ₹<span class="counter" data-to="349">0</span></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section reveal">
+        <h2>Latest Offers</h2>
+        <div class="offers-grid" id="offerTrack">
+            <div class="card"><i class="fa fa-gift"></i>
+                <h3>First Ride Discount</h3>
+                <p>Flat 10% off on your first booking.</p>
+            </div>
+            <div class="card"><i class="fa fa-wallet"></i>
+                <h3>UPI Cashback</h3>
+                <p>Get 5% cashback up to ₹100 on UPI payments.</p>
+            </div>
+            <div class="card"><i class="fa fa-calendar"></i>
+                <h3>Festival Special</h3>
+                <p>Save more this festive season with exclusive deals.</p>
+            </div>
+            <div class="card"><i class="fa fa-tags"></i>
+                <h3>Student Saver</h3>
+                <p>Extra ₹50 off with valid student ID.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section reveal">
+        <h2>Why Choose MyBus?</h2>
+        <div class="features-grid">
+            <div class="card"><i class="fa fa-check-circle"></i>
+                <h3>Easy Booking</h3>
+                <p>Book your bus tickets in just a few clicks.</p>
+            </div>
+            <div class="card"><i class="fa fa-bus"></i>
+                <h3><span class="counter" data-to="2000">0</span>+ Operators</h3>
+                <p>Choose from thousands of trusted operators.</p>
+            </div>
+            <div class="card"><i class="fa fa-lock"></i>
+                <h3>Secure Payments</h3>
+                <p>100% secure and reliable payment options.</p>
+            </div>
+            <div class="card"><i class="fa fa-headset"></i>
+                <h3>24/7 Support</h3>
+                <p>We're always here to help you with your bookings.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section reveal">
+        <h2>What Our Customers Say</h2>
+        <div class="reviews-grid">
+            <div class="card">
+                <p>“Smooth booking experience and great discounts. MyBus is my go-to app!”</p>
+                <h3>- Anurag, Delhi</h3>
+            </div>
+            <div class="card">
+                <p>“I love the secure payment system and fast refunds. Highly recommend!”</p>
+                <h3>- Sara, Mumbai</h3>
+            </div>
+            <div class="card">
+                <p>“Buses are clean and on time. The app makes life so much easier.”</p>
+                <h3>- Shundar, Bangalore</h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="footer-sections">
+        <div class="footer-container">
+            <div class="footer-box">
+                <h4>About MyBus</h4>
+                <a href="aboutus.html">About us</a><br />
+                <a href="#">Company Info</a> <br />
+                <a href="#">Our Team</a><br />
+                <a href="#">Careers</a>
+            </div>
+            <div class="footer-box">
+                <h4>Support</h4>
+                <a href="Needhelp.html">FAQ</a><br />
+                <a href="cancellationpolicy.html">Cancellation Policy</a><br />
+                <a href="customercare.html">Customer Care</a><br />
+                <a href="ticketcancel.html">Ticket Cancel</a>
+            </div>
+            <div class="footer-box">
+                <h4>Quick Links</h4>
+                <a href="offers.html">Offers</a><br />
+                <a href="termsconditions.html">Terms & Conditions</a><br />
+                <a href="privacypolicy.html">Privacy Policy</a>
+            </div>
+            <div class="footer-box">
+                <h4>Contact Us</h4>
+                <p><i class="fa fa-map-marker-alt"></i> New Delhi, India</p>
+                <p><i class="fa fa-envelope"></i> support@mybus.com</p>
+                <p><i class="fa fa-phone"></i> +91 - 9777773080</p>
+            </div>
+            <div class="social-icons">
+                <h4>Connect with us</h4>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; <span id="year"></span> MyBus India Pvt Ltd. All Rights Reserved
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <button class="to-top" id="toTop" title="Back to top" aria-label="Back to top"><i
+            class="fa-solid fa-arrow-up"></i></button>
+
+    <script>
+        const pad = (n) => String(n).padStart(2, '0');
+        const todayISO = (() => {
+            const d = new Date();
+            const yyyy = d.getFullYear();
+            const mm = pad(d.getMonth() + 1);
+            const dd = pad(d.getDate());
+            return `${yyyy}-${mm}-${dd}`;
+        })();
+
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 6);
+        });
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const dateInput = document.getElementById('date');
+        dateInput.min = todayISO;
+        dateInput.value = todayISO;
+
+        const seats = document.getElementById('seats');
+        document.getElementById('incSeat').addEventListener('click', () => {
+            seats.value = Math.min(10, Number(seats.value || 1) + 1);
+        });
+        document.getElementById('decSeat').addEventListener('click', () => {
+            seats.value = Math.max(1, Number(seats.value || 1) - 1);
+        });
+
+        document.getElementById('swapBtn').addEventListener('click', () => {
+            const o = document.getElementById('origin');
+            const d = document.getElementById('destination');
+            [o.value, d.value] = [d.value, o.value];
+            showToast('Swapped routes');
+        });
+
+        const menuToggle = document.getElementById('menu-toggle');
+        document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+            if (menuToggle.checked) menuToggle.checked = false;
+        }));
+
+        const toastEl = document.getElementById('toast');
+        let toastTimer;
+        function showToast(msg) {
+            toastEl.textContent = msg;
+            toastEl.style.display = 'block';
+            toastEl.style.opacity = '0';
+            toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+            requestAnimationFrame(() => {
+                toastEl.style.transition = 'opacity .2s ease, transform .2s ease';
+                toastEl.style.opacity = '1';
+                toastEl.style.transform = 'translateX(-50%) translateY(0)';
+            });
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toastEl.style.opacity = '0';
+                toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+                setTimeout(() => toastEl.style.display = 'none', 200);
+            }, 2000);
+        }
+
+        const revealEls = document.querySelectorAll('.reveal');
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.12 });
+        revealEls.forEach(el => io.observe(el));
+
+        const counters = document.querySelectorAll('.counter');
+        const ioCounters = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const el = e.target; const to = Number(el.dataset.to || 0);
+                    let curr = 0; const step = Math.max(1, Math.ceil(to / 60));
+                    const tick = () => {
+                        curr = Math.min(to, curr + step);
+                        el.textContent = curr.toLocaleString('en-IN');
+                        if (curr < to) requestAnimationFrame(tick);
+                    };
+                    tick();
+                    ioCounters.unobserve(el);
+                }
+            });
+        }, { threshold: 0.6 });
+        counters.forEach(c => ioCounters.observe(c));
+
+        const offerTrack = document.getElementById('offerTrack');
+        let autoScroll;
+        function startAutoScroll() {
+            stopAutoScroll();
+            autoScroll = setInterval(() => {
+                offerTrack.scrollBy({ left: offerTrack.clientWidth * 0.75, behavior: 'smooth' });
+                if (Math.abs(offerTrack.scrollLeft + offerTrack.clientWidth - offerTrack.scrollWidth) < 5) {
+                    offerTrack.scrollTo({ left: 0, behavior: 'smooth' });
+                }
+            }, 2500);
+        }
+        function stopAutoScroll() { if (autoScroll) clearInterval(autoScroll); }
+        offerTrack.addEventListener('mouseenter', stopAutoScroll);
+        offerTrack.addEventListener('mouseleave', startAutoScroll);
+        startAutoScroll();
+
+        const RECENT_KEY = 'mybus_recent_searches';
+        const chipsBox = document.getElementById('recentChips');
+        const recentWrap = document.getElementById('recentSearches');
+        function loadRecents() {
+            const arr = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+            chipsBox.innerHTML = '';
+            if (arr.length) recentWrap.style.display = 'block'; else recentWrap.style.display = 'none';
+            arr.forEach(item => {
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.textContent = `${item.origin} → ${item.destination} • ${item.date} • ${item.seats}`;
+                chip.style.border = '1px solid #e5e7eb';
+                chip.style.background = '#fff';
+                chip.style.padding = '6px 10px';
+                chip.style.borderRadius = '999px';
+                chip.style.cursor = 'pointer';
+                chip.addEventListener('click', () => {
+                    document.getElementById('origin').value = item.origin;
+                    document.getElementById('destination').value = item.destination;
+                    document.getElementById('date').value = item.date;
+                    document.getElementById('seats').value = item.seats;
+                });
+                chipsBox.appendChild(chip);
+            });
+        }
+        loadRecents();
+
+        function saveRecent(obj) {
+            const arr = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+            const filtered = arr.filter(x => !(x.origin === obj.origin && x.destination === obj.destination && x.date === obj.date));
+            filtered.unshift(obj);
+            localStorage.setItem(RECENT_KEY, JSON.stringify(filtered.slice(0, 5)));
+            loadRecents();
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const origin = document.getElementById('origin').value.trim();
+            const destination = document.getElementById('destination').value.trim();
+            const date = document.getElementById('date').value;
+            const seatVal = Math.min(10, Math.max(1, Number(document.getElementById('seats').value || 1)));
+
+            if (!origin || !destination) return showToast('Please enter both cities');
+            if (origin.toLowerCase() === destination.toLowerCase()) return showToast('Origin and destination cannot be the same');
+            if (date < todayISO) return showToast('Please choose a valid future date');
+
+            const search = { origin, destination, date, seats: seatVal };
+            saveRecent(search);
+
+            showToast('Searching buses…');
+            const params = new URLSearchParams(search).toString();
+            setTimeout(() => { window.location.href = `availableBus.html?${params}`; }, 700);
+        });
+
+        const toTop = document.getElementById('toTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) toTop.classList.add('show'); else toTop.classList.remove('show');
+        });
+        toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    </script>
+</body>
+
+</html>

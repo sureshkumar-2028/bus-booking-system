@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancellation Policy | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f9fafb;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .logo a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 60px;
+      transition: box-shadow .2s ease;
+    }
+
+    nav.scrolled {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+    }
+
+    .hamburger-menu {
+      display: none;
+      cursor: pointer;
+      z-index: 200;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background-color: #fff;
+      transition: .3s;
+    }
+
+    .hidden-checkbox {
+      display: none;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: end;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 12px 18px;
+      font-weight: 500;
+      transition: background .25s ease, transform .15s ease;
+      border-radius: 8px;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, .2);
+      transform: translateY(-1px);
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 22px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .container.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0072ff;
+      margin: 0 0 6px;
+    }
+
+    .sub {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .highlight {
+      background: #e6f4ff;
+      padding: 12px;
+      border-left: 4px solid #0072ff;
+      border-radius: 8px;
+      margin: 14px 0 18px;
+    }
+    .accordion {
+      border: 1px solid #eef2f7;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .acc-item+.acc-item {
+      border-top: 1px solid #eef2f7;
+    }
+
+    .acc-btn {
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .2s ease;
+    }
+
+    .acc-btn:hover {
+      background: #f8fafc;
+    }
+
+    .acc-btn i {
+      color: #00a2ff;
+    }
+
+    .acc-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .28s ease;
+      background: #fff;
+    }
+
+    .acc-panel-inner {
+      padding: 0 18px 14px;
+      color: #374151;
+    }
+
+    .acc-panel ul {
+      padding-left: 20px;
+      line-height: 1.8;
+      margin: 10px 0 0;
+    }
+
+    footer {
+      background: #1a252f;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 14px;
+      color: #fff;
+      margin-top: auto;
+    }
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111827;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .25);
+      display: none;
+      z-index: 2000;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger-menu {
+        display: flex;
+      }
+
+      .nav-container {
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        background: rgba(0, 114, 255, .95);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-100%);
+        transition: transform .3s ease;
+        z-index: 100;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0;
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .hidden-checkbox:checked~.nav-container {
+        transform: translateX(0);
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        height: 52px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="logo"><img src="Images/MyBus.png" alt="MyBus Logo"><a href="#">MyBus</a></div>
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a href="MyBooking.html"><i class="fa fa-ticket"></i> Booking</a>
+        <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+        <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+        <a href="login.html"><i class="fas fa-user-circle"></i> Login/SignUp</a>
+      </div>
+    </div>
+  </nav>
+  <div class="container" id="card">
+    <h1>Cancellation & Refund Policy</h1>
+    <div class="sub">Last updated: <span id="lastUpdated"></span></div>
+
+    <p class="highlight"><i class="fa fa-info-circle"></i> We understand that travel plans may change. Below are the
+      rules and charges for cancellations.</p>
+
+    <div class="accordion" id="policyAcc">
+      <div class="acc-item">
+        <button class="acc-btn">
+          <span><i class="fa-solid fa-file-circle-xmark"></i> Cancellation Rules</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <ul>
+              <li>Cancellations made <b>more than 24 hours</b> before departure → <b>Full refund (minus service
+                  charges)</b>.</li>
+              <li>Cancellations made <b>within 12–24 hours</b> of departure → <b>50% refund</b>.</li>
+              <li>Cancellations made <b>less than 12 hours</b> before departure → <b>No refund</b>.</li>
+              <li><b>No-show passengers</b> will not be eligible for any refund.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn">
+          <span><i class="fa-solid fa-rotate-left"></i> Refund Policy</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <ul>
+              <li>Refunds will be processed to the original payment method within <b>5–7 business days</b>.</li>
+              <li>In case of <b>bus cancellation by operator</b>, passengers will receive a <b>100% refund</b>.</li>
+              <li>Service charges and payment gateway fees are non-refundable.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn">
+          <span><i class="fa-solid fa-hand-pointer"></i> How to Cancel</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">
+            <ul>
+              <li>Log in to your account and go to <b>“My Bookings”</b>.</li>
+              <li>Select the booking you want to cancel and click <b>“Cancel Ticket”</b>.</li>
+              <li>You will receive a confirmation email & SMS once the cancellation is successful.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>&copy; 2025 MyBus India Pvt Ltd. All Rights Reserved</footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const d = new Date();
+    document.getElementById('lastUpdated').textContent =
+      d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+    const navbar = document.getElementById('navbar');
+    addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 6), { passive: true });
+
+    const menuToggle = document.getElementById('menu-toggle');
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      if (menuToggle.checked) menuToggle.checked = false;
+    }));
+
+    const card = document.getElementById('card');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) card.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    io.observe(card);
+
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg, ms = 1600) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+      requestAnimationFrame(() => {
+        toastEl.style.opacity = '1';
+        toastEl.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.opacity = '0';
+        toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toastEl.style.display = 'none', 200);
+      }, ms);
+    }
+
+    document.querySelectorAll('.acc-item').forEach(item => {
+      const btn = item.querySelector('.acc-btn');
+      const panel = item.querySelector('.acc-panel');
+      const icon = btn.querySelector('.fa-chevron-down');
+
+      btn.addEventListener('click', () => {
+        const open = panel.style.maxHeight && panel.style.maxHeight !== '0px';
+        document.querySelectorAll('.acc-panel').forEach(p => p.style.maxHeight = null);
+        document.querySelectorAll('.acc-btn .fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
+
+        if (!open) {
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          icon.style.transform = 'rotate(180deg)';
+          showToast(btn.innerText.replace(/\s+/g, ' ').trim() + ' opened');
+        }
+      });
+      if (item === document.querySelector('.acc-item')) {
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+        icon.style.transform = 'rotate(180deg)';
+      }
+    });
+  </script>
+</body>
+
+</html>

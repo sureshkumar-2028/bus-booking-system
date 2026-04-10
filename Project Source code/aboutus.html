@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f4f4f9;
+            color: #333;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 20px;
+        }
+
+        nav {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 200;
+        }
+
+        .hamburger-menu .bar {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: 0.3s;
+        }
+
+        .hidden-checkbox {
+            display: none;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 18px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .about-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-container h2 {
+            text-align: center;
+            color: #0072ff;
+            margin-bottom: 20px;
+        }
+
+        .about-container p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .about-container ul {
+            padding-left: 20px;
+        }
+
+        .about-container ul li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #444;
+        }
+
+        footer {
+            background: #1a252f;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 14px;
+            color: white;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-menu {
+                display: flex;
+            }
+
+            .nav-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(0, 114, 255, 0.95);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                z-index: 100;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                padding: 20px 0;
+            }
+
+            .nav-links a {
+                font-size: 20px;
+                padding: 15px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .hidden-checkbox:checked~.nav-container {
+                transform: translateX(0);
+            }
+
+            .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        @media(max-width: 480px){
+            .about-container { padding:20px; margin: 40px 15px; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo"><img src="Images/MyBus.png" alt=""><a href="#">MyBus</a></div>
+        <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+        <label for="menu-toggle" class="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </label>
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="index.html"><i class="fa fa-home"></i> Home</a>
+                <a href="MyBooking.html"><i class="fa fa-ticket"></i> Booking</a>
+                <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+                <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+                <a href="login.html"><i class="fa fa-user"></i> Login/SignUp</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="about-container">
+        <h2>About Us</h2>
+        <p><strong>Welcome to MyBus, India's trusted online bus ticket booking platform.</strong></p>
+        <p>We started with a simple idea - to make bus travel easy, affordable, and reliable for everyone. Today, we connect millions of passengers with thousands of bus operators across the country, offering a hassle-free way to plan journeys from the comfort of home.</p>
+        <p><strong>At MyBus, we believe travel should be:</strong></p>
+        <ul>
+            <li><strong>Convenient</strong> - Search, compare, and book tickets in just a few clicks.</li>
+            <li><strong>Affordable</strong> - Get the best fares and exclusive discounts.</li>
+            <li><strong>Reliable</strong> - Choose from verified operators and well-maintained buses.</li>
+            <li><strong>Safe & Secure</strong> - With real-time tracking, instant confirmations, and secure payments.</li>
+        </ul>
+        <p>Our mission is to simplify travel and bring people closer to the destinations they love. Whether it's a daily commute, a weekend trip, or a long holiday journey, <strong>MyBus</strong> is here to make your travel smooth and stress-free.</p>
+        <p>We're not just about tickets - we're about your journey, your comfort, and your trust.</p>
+    </div>
+
+    <footer>&copy; 2025 MyBus India Pvt Ltd. All Rights Reserved</footer>
+</body>
+</html>

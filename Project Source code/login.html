@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial;
+      background: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* NAV */
+    .logo a {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+    }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 60px;
+      transition: box-shadow .2s ease;
+    }
+
+    nav.scrolled {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+    }
+
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 200;
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background-color: white;
+      transition: .3s;
+    }
+
+    .hidden-checkbox {
+      display: none;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: end;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 12px 18px;
+      font-weight: 500;
+      transition: background .25s ease, transform .15s ease;
+      border-radius: 8px;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, .2);
+      transform: translateY(-1px);
+    }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 420px;
+      width: 100%;
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .1);
+      animation: floatIn .5s ease both;
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    h3 {
+      text-align: center;
+      color: #0072ff;
+      font-size: 26px;
+      margin: 0 0 14px;
+    }
+
+    .input {
+      margin-bottom: 18px;
+    }
+
+    .input label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .input input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      outline: none;
+    }
+
+    .input input:focus {
+      border-color: #0072ff;
+      box-shadow: 0 0 0 4px rgba(0, 114, 255, .15);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .toggle-pass {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #caps {
+      display: none;
+      color: #e63946;
+      font-weight: 600;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    /* Attractive Login Button (matches home page vibe) */
+    .login-btn {
+      flex: 1 1 50%;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      box-shadow: 0 8px 20px rgba(0, 114, 255, .35);
+      transition: transform .18s ease, box-shadow .25s ease, background .25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 12px 26px rgba(0, 114, 255, .45);
+      background: linear-gradient(135deg, #008cff, #005edb);
+    }
+
+    .login-btn:active {
+      transform: scale(.98);
+    }
+
+    .login-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(0, 114, 255, .2), 0 12px 26px rgba(0, 114, 255, .45);
+    }
+
+    .clear-btn {
+      flex: 1 1 50%;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      background: #ef4444;
+      color: #fff;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .25s ease, background .25s ease;
+    }
+
+    .clear-btn:hover {
+      transform: translateY(-2px);
+      background: #dc2626;
+      box-shadow: 0 8px 20px rgba(220, 38, 38, .35);
+    }
+
+    .clear-btn:active {
+      transform: scale(.98);
+    }
+
+    .signup {
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    .signup a {
+      color: #0072ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .signup a:hover {
+      text-decoration: underline;
+    }
+
+    /* Toast (same style as home) */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111827;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .25);
+      display: none;
+      z-index: 2000;
+    }
+
+    footer {
+      background: #1a252f;
+      color: white;
+      text-align: center;
+      padding: 12px 0;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hamburger-menu {
+        display: flex;
+      }
+
+      .nav-container {
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        background: rgba(0, 114, 255, .95);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-100%);
+        transition: transform .3s ease-in-out;
+        z-index: 100;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0;
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%;
+      }
+
+      .hidden-checkbox:checked~.nav-container {
+        transform: translateX(0);
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .button-group {
+        flex-direction: column;
+      }
+
+      .login-btn,
+      .clear-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="logo"><img src="Images/MyBus.png" alt=""><a href="#">MyBus</a></div>
+
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a href="MyBooking.html"><i class="fa fa-ticket"></i> Booking</a>
+        <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+        <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+        <a href="login.html"><i class="fa fa-user"></i> Login/SignUp</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- LOGIN -->
+  <main>
+    <form class="container" id="loginForm" autocomplete="off">
+      <h3>User Login</h3>
+
+      <div class="input">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+
+      <div class="input">
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input type="password" id="password" placeholder="Password" required>
+          <button type="button" class="toggle-pass" id="togglePass" title="Show/Hide">👁️</button>
+        </div>
+        <small id="caps">Caps Lock is ON</small>
+      </div>
+
+      <div class="row">
+        <input type="checkbox" id="remember"><label for="remember">Remember me</label>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="login-btn">Login</button>
+        <button type="reset" class="clear-btn">Clear</button>
+      </div>
+
+      <p class="signup">Don't have an account? <a href="SignUp.html">Sign up here</a></p>
+    </form>
+  </main>
+
+  <footer>&copy; <span id="year"></span> MyBus India Pvt Ltd. All Rights Reserved</footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const navbar = document.getElementById('navbar');
+    addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 6), { passive: true });
+
+    const menuToggle = document.getElementById('menu-toggle');
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      if (menuToggle.checked) menuToggle.checked = false;
+    }));
+
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function showToast(msg, ms = 1800) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+      requestAnimationFrame(() => {
+        toastEl.style.transition = 'opacity .2s ease, transform .2s ease';
+        toastEl.style.opacity = '1';
+        toastEl.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.opacity = '0';
+        toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toastEl.style.display = 'none', 200);
+      }, ms);
+    }
+
+    function markInvalid(el) { el.style.borderColor = '#ef4444'; el.style.boxShadow = '0 0 0 3px rgba(239,68,68,.15)'; }
+    function clearMark(el) { el.style.borderColor = '#ddd'; el.style.boxShadow = 'none'; }
+
+    const email = document.getElementById('email');
+    const pass = document.getElementById('password');
+    const remember = document.getElementById('remember');
+    const loginForm = document.getElementById('loginForm');
+
+    document.getElementById('togglePass').addEventListener('click', () => {
+      pass.type = pass.type === 'password' ? 'text' : 'password';
+    });
+
+    pass.addEventListener('keydown', (e) => {
+      document.getElementById('caps').style.display = e.getModifierState('CapsLock') ? 'inline' : 'none';
+    });
+    pass.addEventListener('blur', () => document.getElementById('caps').style.display = 'none');
+
+    const REMEMBER_KEY = 'mybus_login_email';
+    try {
+      const saved = localStorage.getItem(REMEMBER_KEY);
+      if (saved) { email.value = saved; remember.checked = true; }
+    } catch { }
+
+    document.querySelectorAll('.login-btn, .clear-btn').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+        const circle = document.createElement('span');
+        circle.className = 'ripple-effect';
+        circle.style.width = circle.style.height = `${diameter}px`;
+        const rect = this.getBoundingClientRect();
+        circle.style.left = `${e.clientX - rect.left - radius}px`;
+        circle.style.top = `${e.clientY - rect.top - radius}px`;
+        const prev = this.querySelector('.ripple-effect'); if (prev) prev.remove();
+        this.appendChild(circle);
+        setTimeout(() => circle.remove(), 600);
+      });
+    });
+
+    const isEmail = v => /\S+@\S+\.\S+/.test(v);
+    const strong = v => v && v.length >= 8;
+
+    email.addEventListener('input', () => clearMark(email));
+    pass.addEventListener('input', () => clearMark(pass));
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const em = email.value.trim();
+      const pw = pass.value;
+
+      if (!isEmail(em)) { showToast('Please enter a valid email'); email.focus(); markInvalid(email); return; }
+      if (!strong(pw)) { showToast('Password must be at least 8 characters'); pass.focus(); markInvalid(pass); return; }
+
+      try {
+        if (remember.checked) localStorage.setItem(REMEMBER_KEY, em);
+        else localStorage.removeItem(REMEMBER_KEY);
+      } catch { }
+
+      showToast('Logging in...');
+      const btn = document.querySelector('.login-btn'); btn.disabled = true; btn.style.opacity = '.75';
+
+      setTimeout(() => {
+        showToast('Login successful!');
+        setTimeout(() => { window.location.href = 'index.html'; }, 650);
+      }, 700);
+    });
+  </script>
+</body>
+
+</html>

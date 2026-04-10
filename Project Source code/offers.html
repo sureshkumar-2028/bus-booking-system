@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bus Booking Offers | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #f5f6fa;
+      color: #333;
+    }
+
+    /* NAV */
+    .logo a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 700
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+      object-fit: contain
+    }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: box-shadow .2s ease;
+    }
+
+    nav.scrolled {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+    }
+
+    .hamburger-menu {
+      display: none;
+      cursor: pointer;
+      z-index: 200;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background: #fff;
+      transition: .3s
+    }
+
+    .hidden-checkbox {
+      display: none
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: end;
+      align-items: center
+    }
+
+    .nav-links {
+      display: flex
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 12px 18px;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: background .25s ease, transform .15s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, .2);
+      transform: translateY(-1px);
+    }
+
+    /* CONTENT */
+    .offers-section {
+      padding: 40px 20px;
+      text-align: center;
+      flex: 1
+    }
+
+    .offers-section h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #0072ff
+    }
+
+    .offers-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .offer-card {
+      position: relative;
+      min-height: 210px;
+      border-radius: 14px;
+      padding: 20px;
+      overflow: hidden;
+      color: #fff;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .1);
+      transition: transform .18s ease, box-shadow .25s ease;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, .18);
+    }
+
+    .offer-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: rgba(35, 38, 47, .45);
+      z-index: 1;
+    }
+
+    .offer-title,
+    .offer-desc,
+    .offer-code {
+      position: relative;
+      z-index: 2;
+    }
+
+    .offer-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 8px 0 10px;
+    }
+
+    .offer-desc {
+      font-size: 14px;
+      opacity: .95;
+      margin-bottom: 14px;
+    }
+
+    .offer-code {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      background: #ff4757;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 8px 18px rgba(255, 71, 87, .28);
+      transition: transform .15s ease, box-shadow .25s ease, background .25s ease;
+    }
+
+    .offer-code:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(255, 71, 87, .36);
+      background: #e84118;
+    }
+
+    .offer-code.copied {
+      background: #10b981 !important;
+      box-shadow: 0 10px 24px rgba(16, 185, 129, .35);
+    }
+
+    /* Backgrounds */
+    .offer1 {
+      background-image: url(Images/Offers1.jpg);
+    }
+
+    .offer2 {
+      background-image: url(Images/offers2.jpg);
+    }
+
+    .offer3 {
+      background-image: url(Images/offers3.png);
+    }
+
+    footer {
+      background: #1a252f;
+      text-align: center;
+      padding: 16px 0;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111827;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .25);
+      display: none;
+      z-index: 2000;
+      font-size: 14px;
+    }
+
+    /* Responsive menu */
+    @media (max-width:768px) {
+      .hamburger-menu {
+        display: flex
+      }
+
+      .nav-container {
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        background: rgba(0, 114, 255, .95);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-100%);
+        transition: transform .3s;
+        z-index: 100;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box
+      }
+
+      .hidden-checkbox:checked~.nav-container {
+        transform: translateX(0)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+        opacity: 0
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg)
+      }
+    }
+
+    @media (max-width:480px) {
+      nav {
+        height: 52px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="logo"><img src="Images/MyBus.png" alt="MyBus Logo"><a href="#">MyBus</a></div>
+
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a href="MyBooking.html"><i class="fa fa-ticket"></i> Booking</a>
+        <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+        <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+        <a href="login.html"><i class="fas fa-user-circle"></i> Login/SignUp</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <section class="offers-section">
+    <h2>Exclusive Bus Booking Offers</h2>
+
+    <div class="offers-container">
+      <div class="offer-card offer1">
+        <div class="offer-title">Flat 20% Off</div>
+        <div class="offer-desc">Book your first bus ticket and get 20% instant discount.</div>
+        <button class="offer-code" data-code="FIRST20" type="button">
+          <i class="fa fa-copy"></i> Use Code: <span>FIRST20</span>
+        </button>
+      </div>
+
+      <div class="offer-card offer2">
+        <div class="offer-title">Save ₹200</div>
+        <div class="offer-desc">Get ₹200 off on round trip bookings above ₹1000.</div>
+        <button class="offer-code" data-code="ROUND200" type="button">
+          <i class="fa fa-copy"></i> Use Code: <span>ROUND200</span>
+        </button>
+      </div>
+
+      <div class="offer-card offer3">
+        <div class="offer-title">10% Cashback</div>
+        <div class="offer-desc">Pay via Wallet and earn 10% cashback on every booking.</div>
+        <button class="offer-code" data-code="CASH10" type="button">
+          <i class="fa fa-copy"></i> Use Code: <span>CASH10</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer>&copy; <span id="year"></span> MyBus India Pvt Ltd. All Rights Reserved</footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Year + sticky nav shadow
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const navbar = document.getElementById('navbar');
+    addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 6), { passive: true });
+
+    // Close mobile menu on link click
+    const menuToggle = document.getElementById('menu-toggle');
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      if (menuToggle.checked) menuToggle.checked = false;
+    }));
+
+    // Toast helper
+    const toastEl = document.getElementById('toast'); let toastTimer;
+    function toast(msg, ms = 1500) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+      requestAnimationFrame(() => {
+        toastEl.style.transition = 'opacity .2s ease, transform .2s ease';
+        toastEl.style.opacity = '1';
+        toastEl.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.opacity = '0';
+        toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toastEl.style.display = 'none', 200);
+      }, ms);
+    }
+
+    // Copy code buttons
+    document.querySelectorAll('.offer-code').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const code = btn.dataset.code || btn.textContent.trim();
+        try {
+          await navigator.clipboard.writeText(code);
+          const prev = btn.innerHTML;
+          btn.classList.add('copied');
+          btn.innerHTML = `<i class="fa fa-check"></i> Copied: <span>${code}</span>`;
+          toast(`Coupon "${code}" copied`);
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = prev;
+          }, 1100);
+        } catch {
+          toast('Copy failed. Tap and hold to select.');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Booking | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial;
+      background: linear-gradient(to right, #eef2f3, #dfe9f3);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .logo a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 700
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+      object-fit: contain
+    }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: box-shadow .2s ease
+    }
+
+    nav.scrolled {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+    }
+
+    .hamburger-menu {
+      display: none;
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 200;
+      flex-direction: column;
+      justify-content: space-around
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background: #fff;
+      transition: .3s
+    }
+
+    .hidden-checkbox {
+      display: none
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: end;
+      align-items: center
+    }
+
+    .nav-links {
+      display: flex
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 12px 18px;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: background .25s, transform .15s
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, .2);
+      transform: translateY(-1px)
+    }
+    main {
+      flex: 1;
+      padding: 24px 16px;
+      max-width: 1050px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    h2 {
+      margin: 6px 0 18px;
+      color: #0072ff
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #eaeef3;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .06);
+      padding: 16px;
+      transition: transform .18s, box-shadow .25s
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .12);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap
+    }
+
+    .left {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start
+    }
+
+    .op {
+      font-weight: 700
+    }
+
+    .route {
+      font-size: 15px;
+      color: #374151
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #6b7280
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .chip.ok {
+      background: #ecfdf5;
+      color: #047857
+    }
+
+    .chip.warn {
+      background: #fff7ed;
+      color: #b45309
+    }
+
+    .chip.bad {
+      background: #fef2f2;
+      color: #b91c1c
+    }
+
+    .price {
+      font-weight: 800
+    }
+
+    .muted {
+      color: #6b7280;
+      font-size: 13px
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px
+    }
+
+    .btn {
+      padding: 10px 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .25s, background .25s
+    }
+
+    .btn:active {
+      transform: scale(.98)
+    }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      box-shadow: 0 8px 18px rgba(0, 114, 255, .28)
+    }
+
+    .primary:hover {
+      background: linear-gradient(135deg, #008cff, #005edb)
+    }
+
+    .ghost {
+      background: #ef4444;
+      color: #fff
+    }
+
+    .ghost:hover {
+      background: #dc2626
+    }
+
+    .soft {
+      background: #f3f4f6
+    }
+
+    .soft:hover {
+      background: #e5e7eb
+    }
+
+    .empty {
+      background: #fff;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      color: #6b7280
+    }
+
+    footer {
+      background: #1a252f;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 14px;
+      color: #fff;
+      margin-top: auto
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111827;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .25);
+      display: none;
+      z-index: 2000
+    }
+
+    @media (max-width:768px) {
+      .hamburger-menu {
+        display: flex
+      }
+
+      .nav-container {
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        background: rgba(0, 114, 255, .95);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-100%);
+        transition: transform .3s;
+        z-index: 100
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%
+      }
+
+      .hidden-checkbox:checked~.nav-container {
+        transform: translateX(0)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+        opacity: 0
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="logo">
+      <img src="Images/MyBus.png" alt="MyBus Logo">
+      <a href="#">MyBus</a>
+    </div>
+
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a href="MyBooking.html"><i class="fa fa-ticket"></i> My Booking</a>
+        <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+        <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+        <a href="login.html"><i class="fa fa-user"></i> Login/SignUp</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <h2><i class="fa fa-ticket"></i> Your Bookings</h2>
+
+    <div id="list" class="list"></div>
+
+    <div id="empty" class="empty" style="display:none;">
+      <p><i class="fa fa-circle-info"></i> No bookings found. Start your journey by booking bus tickets!</p>
+      <div class="actions" style="justify-content:center;margin-top:10px">
+        <a href="availableBus.html" class="btn primary"><i class="fa fa-bus"></i> Find Buses</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; <span id="year"></span> MyBus India Pvt Ltd. All Rights Reserved
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Year + sticky nav + close menu
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const navbar = document.getElementById('navbar');
+    addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 6), { passive: true });
+    const menuToggle = document.getElementById('menu-toggle');
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      if (menuToggle.checked) menuToggle.checked = false;
+    }));
+
+    // Toast
+    const toastEl = document.getElementById('toast'); let toastTimer;
+    function toast(msg, ms = 1600) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+      requestAnimationFrame(() => {
+        toastEl.style.transition = 'opacity .2s ease, transform .2s ease';
+        toastEl.style.opacity = '1';
+        toastEl.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.opacity = '0';
+        toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toastEl.style.display = 'none', 200);
+      }, ms);
+    }
+
+    // Storage helpers
+    const KEY = 'mybus_bookings';
+    const getBookings = () => JSON.parse(localStorage.getItem(KEY) || '[]');
+    const saveBookings = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+
+    const listEl = document.getElementById('list');
+    const emptyEl = document.getElementById('empty');
+
+    function formatINR(n) { return Number(n || 0).toLocaleString('en-IN'); }
+
+    function statusChip(status) {
+      const s = (status || '').toUpperCase();
+      const cls = s === 'CANCELLED' ? 'bad' : (s === 'PENDING' ? 'warn' : 'ok');
+      const icon = s === 'CANCELLED' ? 'circle-xmark' : (s === 'PENDING' ? 'clock' : 'circle-check');
+      return `<span class="chip ${cls}"><i class="fa fa-${icon}"></i> ${s || 'CONFIRMED'}</span>`;
+    }
+
+    function render() {
+      const arr = getBookings();
+      listEl.innerHTML = '';
+      if (!arr.length) {
+        emptyEl.style.display = '';
+        return;
+      }
+      emptyEl.style.display = 'none';
+
+      arr.forEach(b => {
+        const passenger = b.passenger?.name ? `Passenger: <b>${b.passenger.name}</b>` : 'Passenger: <span class="muted">Not added</span>';
+        const price = formatINR((Number(b.price || 0) + 49));
+        const html = `
+          <div class="card" data-id="${b.id}">
+            <div class="row">
+              <div class="left">
+                <div>
+                  <div class="op">${b.operator || 'Operator'}</div>
+                  <div class="route">${b.route || ''} <span class="muted">• ${b.date || '-'}</span></div>
+                  <div class="meta"><i class="fa fa-clock"></i> ${b.dep || '-'} → ${b.arr || '-'}</div>
+                  <div class="meta"><i class="fa fa-chair"></i> Seats: ${b.seats || 1}</div>
+                  <div class="meta">${passenger}</div>
+                </div>
+              </div>
+              <div style="text-align:right;min-width:180px">
+                <div>${statusChip(b.status)}</div>
+                <div class="price" style="margin-top:8px">₹ ${price}</div>
+                <div class="muted">Incl. ₹49 fees</div>
+                <div class="actions">
+                  <button class="btn soft" onclick="viewEdit('${b.id}')"><i class="fa fa-pen-to-square"></i> View / Edit</button>
+                  <button class="btn primary" onclick="downloadTicket('${b.id}')"><i class="fa fa-download"></i> Ticket</button>
+                  ${(b.status || '').toUpperCase() === 'CANCELLED'
+            ? `<button class="btn ghost" disabled title="Already cancelled"><i class="fa fa-ban"></i> Cancelled</button>`
+            : `<button class="btn ghost" onclick="cancelBooking('${b.id}')"><i class="fa fa-ban"></i> Cancel</button>`
+          }
+                </div>
+              </div>
+            </div>
+            ${b.refundNote ? `<div class="muted" style="margin-top:8px"><i class="fa fa-receipt"></i> ${b.refundNote}</div>` : ''}
+          </div>
+        `;
+        listEl.insertAdjacentHTML('beforeend', html);
+      });
+    }
+
+    // Actions
+    window.viewEdit = function (id) {
+      location.href = `passengerdetails.html?bookingId=${encodeURIComponent(id)}`;
+    }
+
+    window.cancelBooking = function (id) {
+      const ok = confirm('Are you sure you want to cancel this ticket? Refunds follow operator policy.');
+      if (!ok) return;
+      const arr = getBookings();
+      const idx = arr.findIndex(x => x.id === id);
+      if (idx === -1) { toast('Booking not found'); return; }
+      const b = arr[idx];
+      arr[idx] = {
+        ...b,
+        status: 'CANCELLED',
+        refundNote: 'Cancellation requested. Refund (if applicable) within 5–7 business days.'
+      };
+      saveBookings(arr);
+      toast('Booking cancelled');
+      render();
+    }
+
+    window.downloadTicket = function (id) {
+      const arr = getBookings();
+      const b = arr.find(x => x.id === id);
+      if (!b) { toast('Booking not found'); return; }
+      const txt =
+        `MYBUS — E-TICKET
+========================
+Status   : ${(b.status || 'CONFIRMED').toUpperCase()}
+Booking  : ${b.id}
+Route    : ${b.route || '-'}
+Date     : ${b.date || '-'}
+Operator : ${b.operator || '-'}
+Depart   : ${b.dep || '-'}
+Arrive   : ${b.arr || '-'}
+Seats    : ${b.seats || 1}
+Passenger: ${b.passenger?.name || '-'}
+Phone    : ${b.passenger?.phone || '-'}
+Email    : ${b.passenger?.email || '-'}
+
+Total    : ₹ ${Number(b.price || 0) + 49}
+
+Have a great trip!`;
+      const blob = new Blob([txt], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `MyBus_Ticket_${b.id}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+      toast('Ticket downloaded');
+    }
+
+    // Initial render
+    render();
+  </script>
+</body>
+
+</html>

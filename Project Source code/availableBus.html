@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Buses | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #333;
+      background: #f9fafb
+    }
+
+    /* NAV */
+    .logo a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 600
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+      object-fit: contain
+    }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 60px;
+      transition: box-shadow .2s ease
+    }
+
+    nav.scrolled {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+    }
+
+    .hamburger-menu {
+      display: none;
+      cursor: pointer;
+      z-index: 200;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background: #fff;
+      transition: all .3s ease-in-out
+    }
+
+    .hidden-checkbox {
+      display: none
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: end;
+      align-items: center
+    }
+
+    .nav-links {
+      display: flex
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 12px 18px;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: background .25s, transform .15s
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, .2);
+      transform: translateY(-1px)
+    }
+
+    /* PAGE */
+    .results-container {
+      flex: 1;
+      padding: 24px 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0 20px
+    }
+
+    .page-head h2 {
+      margin: 0;
+      color: #0072ff
+    }
+
+    .mini {
+      color: #6b7280;
+      font-size: 14px
+    }
+
+    .bus-listing {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #eef2f7;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .06);
+      padding: 18px;
+      margin-bottom: 14px;
+      transition: box-shadow .25s ease
+    }
+
+    .bus-listing:hover {
+      box-shadow: 0 10px 22px rgba(0, 0, 0, .12)
+    }
+
+    .bus-info h3 {
+      margin: 0 0 6px
+    }
+
+    .bus-info p {
+      margin: 3px 0;
+      color: #555
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e6f4ff;
+      color: #0369a1;
+      font-size: 12px;
+      margin-left: 8px
+    }
+
+    .book {
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .18s, box-shadow .25s, background .25s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .book:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 12px 26px rgba(0, 114, 255, .35);
+      background: linear-gradient(135deg, #008cff, #005edb)
+    }
+
+    footer {
+      background: #1a252f;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 14px;
+      color: #fff;
+      margin-top: auto
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111827;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .25);
+      display: none;
+      z-index: 2000
+    }
+
+    /* Responsive */
+    @media (max-width:768px) {
+      .bus-listing {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px
+      }
+
+      .hamburger-menu {
+        display: flex
+      }
+
+      .nav-container {
+        position: fixed;
+        inset: 0;
+        height: 100vh;
+        background: rgba(0, 114, 255, .95);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-100%);
+        transition: transform .3s;
+        z-index: 100
+      }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        padding: 20px 0
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box
+      }
+
+      .hidden-checkbox:checked~.nav-container {
+        transform: translateX(0)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(2) {
+        opacity: 0
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg)
+      }
+
+      .hidden-checkbox:checked~.hamburger-menu .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="logo"><img src="Images/MyBus.png" alt=""><a href="#">MyBus</a></div>
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a href="MyBooking.html"><i class="fa fa-ticket"></i> My Booking</a>
+        <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+        <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+        <a href="login.html"><i class="fas fa-user-circle"></i> Login/SignUp</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="results-container">
+    <div class="page-head">
+      <h2>Available Buses <span id="routePill" class="pill" style="display:none"></span></h2>
+      <div class="mini" id="meta"></div>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="bus-listing">
+      <div class="bus-info">
+        <h3>Shri Ganesh Travels — Volvo AC</h3>
+        <p><b>Departure:</b> <span>10:00</span> &nbsp; | &nbsp; <b>Arrival:</b> <span>16:00</span></p>
+        <p>Duration: 6 hrs <span class="pill">Wi-Fi</span> <span class="pill">AC</span></p>
+        <p><b>Price:</b> ₹<span>3000</span></p>
+      </div>
+      <div class="bus-actions">
+        <button class="book" data-operator="Shri Ganesh Travels — Volvo AC" data-dep="10:00" data-arr="16:00"
+          data-price="3000"><i class="fa fa-bus"></i> Book Now</button>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="bus-listing">
+      <div class="bus-info">
+        <h3>MR Travels — Non-AC Seater</h3>
+        <p><b>Departure:</b> <span>11:30</span> &nbsp; | &nbsp; <b>Arrival:</b> <span>18:30</span></p>
+        <p>Duration: 7 hrs <span class="pill">Seater</span></p>
+        <p><b>Price:</b> ₹<span>2500</span></p>
+      </div>
+      <div class="bus-actions">
+        <button class="book" data-operator="MR Travels — Non-AC Seater" data-dep="11:30" data-arr="18:30"
+          data-price="2500"><i class="fa fa-bus"></i> Book Now</button>
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="bus-listing">
+      <div class="bus-info">
+        <h3>GSRTC — Non-AC Sleeper</h3>
+        <p><b>Departure:</b> <span>12:30</span> &nbsp; | &nbsp; <b>Arrival:</b> <span>18:00</span></p>
+        <p>Duration: 5.5 hrs <span class="pill">Sleeper</span></p>
+        <p><b>Price:</b> ₹<span>2575</span></p>
+      </div>
+      <div class="bus-actions">
+        <button class="book" data-operator="GSRTC — Non-AC Sleeper" data-dep="12:30" data-arr="18:00"
+          data-price="2575"><i class="fa fa-bus"></i> Book Now</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>&copy; 2025 MyBus India Pvt Ltd. All Rights Reserved</footer>
+
+  <!-- Toast -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Sticky nav shadow + close menu
+    const navbar = document.getElementById('navbar');
+    addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 6), { passive: true });
+    const menuToggle = document.getElementById('menu-toggle');
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      if (menuToggle.checked) menuToggle.checked = false;
+    }));
+
+    // Toast
+    const toastEl = document.getElementById('toast'); let toastTimer;
+    function toast(msg, ms = 1600) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+      requestAnimationFrame(() => {
+        toastEl.style.transition = 'opacity .2s ease, transform .2s ease';
+        toastEl.style.opacity = '1';
+        toastEl.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.opacity = '0';
+        toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toastEl.style.display = 'none', 200);
+      }, ms);
+    }
+
+    const params = new URLSearchParams(location.search);
+    const origin = params.get('origin') || 'Origin';
+    const destination = params.get('destination') || 'Destination';
+    const date = params.get('date') || '';
+    const seats = Math.max(1, Math.min(10, Number(params.get('seats') || 1)));
+
+    const routePill = document.getElementById('routePill');
+    routePill.textContent = `${origin} → ${destination}`;
+    routePill.style.display = 'inline-block';
+    const meta = document.getElementById('meta');
+    meta.textContent = (date ? `Date: ${date}` : '') + (seats ? ` • Seats: ${seats}` : '');
+
+    const KEY = 'mybus_bookings';
+    function saveBooking(b) {
+      try {
+        const arr = JSON.parse(localStorage.getItem(KEY) || '[]');
+        arr.unshift(b);
+        localStorage.setItem(KEY, JSON.stringify(arr.slice(0, 20)));
+        return true;
+      } catch { return false; }
+    }
+    function newId() {
+      const n = Date.now().toString().slice(-6);
+      return 'MB' + n + Math.floor(Math.random() * 90 + 10);
+    }
+
+    document.querySelectorAll('.book').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const booking = {
+          id: newId(),
+          route: `${origin} → ${destination}`,
+          date,
+          dep: btn.dataset.dep,
+          arr: btn.dataset.arr,
+          operator: btn.dataset.operator,
+          seats,
+          price: Number(btn.dataset.price || 0),
+          status: 'CONFIRMED',
+          createdAt: new Date().toISOString()
+        };
+        const ok = saveBooking(booking);
+        if (ok) {
+          toast('Saved! Redirecting to passenger details…');
+          setTimeout(() => location.href = `passengerdetails.html?bookingId=${encodeURIComponent(booking.id)}`, 650);
+        } else {
+          toast('Could not save booking on this device');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

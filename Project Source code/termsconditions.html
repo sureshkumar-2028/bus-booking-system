@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms & Conditions | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #eef2f3, #dfe9f3);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 20px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .logo a {
+      color: white;
+      font-size: 24px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 18px;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 200;
+    }
+
+    .hamburger-menu .bar {
+      width: 100%;
+      height: 3px;
+      background-color: white;
+      transition: all 0.3s ease;
+    }
+
+    .hidden-checkbox {
+      display: none;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0072ff;
+      margin-bottom: 30px;
+    }
+
+    .terms-section {
+      background: white;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .terms-section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .terms-section h2 {
+      color: #0072ff;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+
+    footer {
+      background: #1a252f;
+      color: #ccc;
+      text-align: center;
+      padding: 15px;
+      margin-top: auto;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger-menu {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background: linear-gradient(to right, #00c6ff, #0072ff);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: left 0.3s ease;
+      }
+
+      .nav-links a {
+        font-size: 20px;
+        padding: 15px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .hidden-checkbox:checked ~ .nav-links {
+        left: 0;
+      }
+
+      .hidden-checkbox:checked + .hamburger-menu .bar:nth-child(1) {
+        transform: rotate(45deg)
+        translate(5px, 5px);
+      }
+
+      .hidden-checkbox:checked + .hamburger-menu .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hidden-checkbox:checked + .hamburger-menu .bar:nth-child(3) {
+        transform: rotate(-45deg) 
+        translate(5px, -5px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="logo">
+      <img src="Images/MyBus.png" alt="MyBus Logo">
+      <a href="#">MyBus</a>
+    </div>
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle navigation menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </label>
+    <div class="nav-links">
+      <a href="index.html"><i class="fa fa-home"></i> Home</a>
+      <a href="MyBooking.html"><i class="fa fa-ticket"></i> Booking</a>
+      <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+      <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+      <a href="login.html"><i class="fa fa-user"></i> Login/SignUp</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Terms & Conditions</h1>
+
+    <div class="terms-section">
+      <h2>1. Introduction</h2>
+      <p>Welcome to MyBus. By using our website and booking services, you agree to the following terms and conditions. Please read them carefully before proceeding with any booking.</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>2. Ticket Booking</h2>
+      <ul>
+        <li>All bookings are subject to seat availability and operator confirmation.</li>
+        <li>Accurate passenger details must be provided while booking.</li>
+        <li>MyBus acts only as an intermediary between passengers and bus operators.</li>
+      </ul>
+    </div>
+
+    <div class="terms-section">
+      <h2>3. Payments</h2>
+      <p>Payments for tickets must be made through secure payment gateways. We are not responsible for delays caused by banking or payment gateway issues.</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>4. Cancellations & Refunds</h2>
+      <p>Cancellation and refund policies vary by bus operator. Refunds, if applicable, will be processed within the operator’s policy timelines. Some tickets may be non-refundable.</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>5. Passenger Responsibilities</h2>
+      <ul>
+        <li>Carry valid ID proof during travel.</li>
+        <li>Arrive at the boarding point on time. Missed buses due to passenger delay are not refundable.</li>
+        <li>Ensure personal belongings are kept safe. MyBus is not responsible for lost luggage.</li>
+      </ul>
+    </div>
+
+    <div class="terms-section">
+      <h2>6. Operator Responsibilities</h2>
+      <p>Bus operators are responsible for providing safe and timely services. MyBus is not liable for delays, cancellations, or issues arising from the operator’s end.</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>7. Liability Disclaimer</h2>
+      <p>MyBus is not responsible for accidents, delays, service interruptions, or damages during travel. Our liability is limited to the booking service provided.</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>8. Intellectual Property</h2>
+      <p>All website content, including logos, text, and design, belongs to MyBus. Unauthorized use or reproduction is strictly prohibited.</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>9. Changes to Terms</h2>
+      <p>MyBus reserves the right to modify these terms at any time. Updated terms will be posted on this page and are effective immediately.</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>10. Governing Law</h2>
+      <p>These terms are governed by the laws of India. Any disputes will be subject to the jurisdiction of courts in [Your City].</p>
+    </div>
+
+    <div class="terms-section">
+      <h2>11. Contact Us</h2>
+      <p>If you have any questions about these Terms & Conditions, please contact us:</p>
+      <p><b>Email:</b> support@mybus.com<br>
+         <b>Phone:</b> +91-9777773080</p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 MyBus India Pvt Ltd. All Rights Reserved
+  </footer>
+</body>
+
+</html>

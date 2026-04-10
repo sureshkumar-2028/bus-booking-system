@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Care | MyBus</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: 'Poppins', sans-serif;
+      background: #f9fafb; color: #333; display: flex; flex-direction: column; min-height: 100vh; line-height: 1.6;
+    }
+
+    .logo a { color: #fff; text-decoration: none; font-size: 24px; font-weight: 600; }
+    .logo img { width: 40px; height: 20px; object-fit: contain; }
+
+    nav {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 20px; position: sticky; top: 0; z-index: 1000; height: 60px;
+      transition: box-shadow .2s ease;
+    }
+    nav.scrolled { box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+
+    .hamburger-menu{ display:none; cursor:pointer; z-index:200; flex-direction:column; justify-content:space-around; width:30px; height:25px; }
+    .hamburger-menu .bar{ width:100%; height:3px; background:#fff; transition:.3s; }
+    .hidden-checkbox{ display:none; }
+
+    .nav-container{ display:flex; justify-content:end; align-items:center; }
+    .nav-links{ display:flex; }
+    .nav-links a{
+      color:#fff; text-decoration:none; font-size:16px; padding:12px 18px; font-weight:500;
+      transition: background .25s ease, transform .15s ease; border-radius:8px;
+    }
+    .nav-links a:hover{ background:rgba(255,255,255,.2); transform:translateY(-1px); }
+
+    .container{ max-width:1000px; margin:40px auto; padding:20px; }
+    h1{ text-align:center; color:#0072ff; margin-bottom:20px; }
+
+    .card{
+      background:#fff; padding:22px; margin-bottom:20px; border-radius:12px;
+      box-shadow:0 2px 10px rgba(0,0,0,.08);
+      opacity:0; transform:translateY(12px); transition:opacity .5s ease, transform .5s ease;
+    }
+    .card.visible{ opacity:1; transform:none; }
+
+    .card h2{ color:#00c6ff; margin-bottom:10px; font-size:20px; }
+
+    .contact-info p{ margin:8px 0; font-size:15px; display:flex; align-items:center; gap:8px; }
+    .contact-info i{ color:#0072ff; }
+
+    .copyable{ cursor:pointer; user-select:none; }
+    .copyable:hover{ text-decoration:underline; }
+
+    form input, form textarea, form button{
+      width:100%; margin:10px 0; padding:12px; border-radius:10px; border:1px solid #e5e7eb; font-size:15px; font-family:'Poppins', sans-serif;
+      transition: border-color .2s ease, box-shadow .2s ease; outline:none;
+    }
+    form input:focus, form textarea:focus{ border-color:#0072ff; box-shadow:0 0 0 4px rgba(0,114,255,.12); }
+    form textarea{ height:120px; resize:none; }
+
+    .row-sm{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .hint{ font-size:12px; color:#6b7280; }
+
+    .counter{ font-size:12px; color:#6b7280; margin-top:-6px; text-align:right; }
+
+    form button{
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      border:none; color:#fff; font-weight:700; cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,114,255,.25);
+      transition: transform .18s ease, box-shadow .25s ease, background .25s ease;
+    }
+    form button:hover{ transform:translateY(-2px) scale(1.01); box-shadow:0 12px 26px rgba(0,114,255,.35); background: linear-gradient(135deg, #008cff, #005edb); }
+    form button:active{ transform:scale(.98); }
+
+    footer{ background:#1a252f; text-align:center; padding:20px 0; font-size:14px; color:#fff; margin-top:auto; }
+
+    #toast{
+      position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+      background:#111827; color:#fff; padding:12px 16px; border-radius:12px; box-shadow:0 12px 24px rgba(0,0,0,.25);
+      display:none; z-index:2000; transition:opacity .2s ease, transform .2s ease;
+    }
+
+    @media (max-width: 768px){
+      .hamburger-menu{ display:flex; }
+      .nav-container{
+        position:fixed; inset:0; height:100vh; background:rgba(0,114,255,.95);
+        flex-direction:column; justify-content:center; align-items:center;
+        transform:translateX(-100%); transition:transform .3s ease; z-index:100;
+      }
+      .nav-links{ flex-direction:column; width:100%; text-align:center; padding:20px 0; }
+      .nav-links a{ font-size:20px; padding:15px; width:100%; box-sizing:border-box; }
+      .hidden-checkbox:checked ~ .nav-container{ transform:translateX(0); }
+      .hidden-checkbox:checked ~ .hamburger-menu .bar:nth-child(2){ opacity:0; }
+      .hidden-checkbox:checked ~ .hamburger-menu .bar:nth-child(1){ transform:translateY(8px) rotate(45deg); }
+      .hidden-checkbox:checked ~ .hamburger-menu .bar:nth-child(3){ transform:translateY(-8px) rotate(-45deg); }
+    }
+    @media (max-width:480px){ nav{ height:52px; } }
+  </style>
+</head>
+
+<body>
+  <nav id="navbar">
+    <div class="logo"><img src="Images/MyBus.png" alt=""><a href="#">MyBus</a></div>
+    <input type="checkbox" id="menu-toggle" class="hidden-checkbox">
+    <label for="menu-toggle" class="hamburger-menu" aria-label="Toggle menu">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </label>
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="index.html"><i class="fa fa-home"></i> Home</a>
+        <a href="MyBooking.html"><i class="fa fa-ticket"></i> Booking</a>
+        <a href="offers.html"><i class="fa fa-gift"></i> Offers</a>
+        <a href="Needhelp.html"><i class="fa fa-life-ring"></i> Need Help?</a>
+        <a href="login.html"><i class="fas fa-user-circle"></i> Login/SignUp</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Customer Care</h1>
+
+    <div class="card reveal">
+      <h2><i class="fa fa-headset"></i> Get in Touch</h2>
+      <p><i class="fa fa-phone"></i> <b>Phone:</b> <span class="copyable" data-copy="+91-9876543210">+91-9876543210</span> <span class="hint">(tap to copy)</span></p>
+      <p><i class="fa fa-envelope"></i> <b>Email:</b> <span class="copyable" data-copy="support@mybus.com">support@mybus.com</span> <span class="hint">(tap to copy)</span></p>
+      <p><i class="fa fa-map-marker-alt"></i> <b>Address:</b> MyBus India Pvt. Ltd., New Delhi, India</p>
+    </div>
+
+    <div class="card reveal">
+      <h2><i class="fa fa-question-circle"></i> Quick Help (FAQs)</h2>
+      <p><b>Q:</b> How can I cancel my ticket?<br>
+         <b>A:</b> Log in to your account, go to “My Bookings,” and select “Cancel Ticket”.</p>
+      <p><b>Q:</b> How long does a refund take?<br>
+         <b>A:</b> Refunds are processed within 5–7 business days as per operator policy.</p>
+      <p><b>Q:</b> What if I miss my bus?<br>
+         <b>A:</b> Unfortunately, missed buses due to passenger delay are non-refundable.</p>
+    </div>
+
+    <div class="card reveal">
+      <h2><i class="fa fa-paper-plane"></i> Send Us a Message</h2>
+      <form id="careForm" autocomplete="off" novalidate>
+        <div class="row-sm">
+          <input type="text" id="name" placeholder="Your Name" required>
+          <input type="email" id="email" placeholder="Your Email" required>
+        </div>
+        <textarea id="message" placeholder="Your Message" maxlength="400" required></textarea>
+        <div class="counter"><span id="chars">0</span>/400</div>
+        <div class="row-sm">
+          <label class="hint" style="display:flex;align-items:center;gap:6px;">
+            <input type="checkbox" id="rememberMe" style="width:auto;"> Remember my details on this device
+          </label>
+        </div>
+        <button type="submit"><i class="fa fa-paper-plane"></i> Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 MyBus India Pvt Ltd. All Rights Reserved</footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 6), { passive: true });
+
+    const menuToggle = document.getElementById('menu-toggle');
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      if (menuToggle.checked) menuToggle.checked = false;
+    }));
+
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+
+    const toastEl = document.getElementById('toast'); let toastTimer;
+    function toast(msg, ms = 1600){
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      toastEl.style.opacity = '0';
+      toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+      requestAnimationFrame(() => {
+        toastEl.style.opacity = '1';
+        toastEl.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.opacity = '0';
+        toastEl.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toastEl.style.display = 'none', 200);
+      }, ms);
+    }
+
+    document.querySelectorAll('.copyable').forEach(el => {
+      el.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(el.dataset.copy);
+          toast('Copied: ' + el.dataset.copy);
+        } catch {
+          toast('Copy failed. Long-press to copy.');
+        }
+      });
+    });
+
+    const NAME_KEY = 'mybus_cc_name';
+    const EMAIL_KEY = 'mybus_cc_email';
+    const nameEl = document.getElementById('name');
+    const emailEl = document.getElementById('email');
+    const msgEl = document.getElementById('message');
+    const rememberEl = document.getElementById('rememberMe');
+    const charsEl = document.getElementById('chars');
+
+    try {
+      const n = localStorage.getItem(NAME_KEY);
+      const e = localStorage.getItem(EMAIL_KEY);
+      if (n) { nameEl.value = n; rememberEl.checked = true; }
+      if (e) { emailEl.value = e; rememberEl.checked = true; }
+    } catch {}
+    const updateCount = () => charsEl.textContent = String(msgEl.value.length);
+    msgEl.addEventListener('input', updateCount);
+    updateCount();
+    const isEmail = v => /\S+@\S+\.\S+/.test(v);
+    function markInvalid(el){
+      el.style.borderColor = '#ef4444';
+      el.style.boxShadow = '0 0 0 3px rgba(239,68,68,.15)';
+    }
+    function clearMark(el){
+      el.style.borderColor = '#e5e7eb';
+      el.style.boxShadow = 'none';
+    }
+    [nameEl, emailEl, msgEl].forEach(el => el.addEventListener('input', () => clearMark(el)));
+
+    document.getElementById('careForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = nameEl.value.trim();
+      const email = emailEl.value.trim();
+      const message = msgEl.value.trim();
+
+      let invalid = false;
+      if (!name){ markInvalid(nameEl); invalid = true; }
+      if (!isEmail(email)){ markInvalid(emailEl); invalid = true; }
+      if (message.length < 10){ markInvalid(msgEl); invalid = true; toast('Please write at least 10 characters'); }
+
+      if (invalid){ return; }
+      try{
+        if (rememberEl.checked){
+          localStorage.setItem(NAME_KEY, name);
+          localStorage.setItem(EMAIL_KEY, email);
+        } else {
+          localStorage.removeItem(NAME_KEY);
+          localStorage.removeItem(EMAIL_KEY);
+        }
+      } catch {}
+
+      toast('Message sent! Our team will reply soon.');
+      setTimeout(() => {
+        e.target.reset();
+        updateCount();
+      }, 700);
+    });
+  </script>
+</body>
+</html>
